@@ -1,0 +1,4 @@
+# worker 运行期依赖(vLLM / torch / CUDA 由基础镜像 vllm/vllm-openai:v0.22.1-cu129-ubuntu2404 提供)
+runpod>=1.7.0
+pypdfium2>=4.30.0
+pillow>=10.0.0
