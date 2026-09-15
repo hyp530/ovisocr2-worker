@@ -20,7 +20,13 @@ RUN python3 -m pip install --no-cache-dir -r /requirements.txt
 # 把模型权重烤进镜像:冷启动只拉镜像,不再每次去 Hugging Face 下载 1.7GB 权重。
 RUN python3 -c "from huggingface_hub import snapshot_download; snapshot_download('ATH-MaaS/OvisOCR2', ignore_patterns=['*.png', '.eval_results/*'])"
 
-COPY handler.py /handler.py
+# 文件名与 RunPod 官方参考仓库 runpod-workers/worker-basic 保持一致(rp_handler.py),
+# 让任何按约定名查找 handler 的检查都能命中。
+COPY rp_handler.py /rp_handler.py
 
-# vLLM 官方镜像的 ENTRYPOINT 是 openai api_server,必须覆盖成我们的 handler。
-ENTRYPOINT ["python3", "-u", "/handler.py"]
+# 注意:vLLM 官方镜像自带
+#   ENTRYPOINT ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+# 所以这里必须用 ENTRYPOINT 覆盖它。若照抄 worker-basic 的 CMD 写法
+# (它的基底 python:3.10-slim 没有 ENTRYPOINT),我们的 CMD 会变成上面那个
+# api_server 的参数,worker 直接跑废。
+ENTRYPOINT ["python3", "-u", "/rp_handler.py"]

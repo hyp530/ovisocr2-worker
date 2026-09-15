@@ -36,7 +36,7 @@ worker 容器
 | 文件 | 作用 |
 | --- | --- |
 | `Dockerfile` | 基于 `vllm/vllm-openai:v0.22.1-cu129-ubuntu2404`,装 runpod/pypdfium2,烤入权重 |
-| `handler.py` | RunPod handler;引擎在导入时构建一次并复用 |
+| `rp_handler.py` | RunPod handler;引擎在导入时构建一次并复用(文件名与 RunPod 官方 worker-basic 一致) |
 | `requirements.txt` | worker 运行期依赖 |
 | `scripts/smoke_test.py` | 端点建好后打一发真实请求(仅用标准库) |
 | `scripts/deploy_runpod.py` | 走 REST API 用**已推送到镜像仓库**的镜像建 template + endpoint |
